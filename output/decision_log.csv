@@ -1,0 +1,10 @@
+table,issue,decision,reason
+patients,exact duplicate rows,"I dropped exact duplicates, keeping the first copy.",The 45 repeats came from a registry re-export and provided no new information.
+patients,gender spellings that were not a code,"I stripped and lowercased each spelling, mapped it to F, M, or X, and made unknown or empty values missing.","The staff typed the same genders many ways, and unknown or blank entries carried no gender information."
+patients,site codes needing normalization,Uppercased site codes and removed hyphens and spaces.,Variants like N-01 and n01 are the same site and must match sites.csv for the join.
+patients,birth_year sentinel 9999,I replaced 9999 with missing and stored birth_year as Int64.,"9999 is a placeholder for an unknown year, so treating it as a real year would distort ages."
+visits,weight column named wt_kg in visits_south.csv,Renamed wt_kg to weight_kg before stacking the two files.,"Both columns hold weight in kg, and matching names keep them in one column when stacked."
+visits,sbp sentinel 999 and readings outside 70 through 250,Made 999 and any reading outside 70 through 250 missing and stored sbp_mmhg as Int64.,"999 marks a missing reading, and values outside that range are not plausible blood pressures."
+visits,impossible and loosely written visit dates,Kept only exact YYYY-MM-DD dates that exist on the calendar and made the rest missing.,"Dates like 2026-02-30 cannot be real, and loosely written dates could be misread."
+visits,repeated patient_id and visit pairs,"Dropped exact duplicates, then kept the later reading of each recheck by visit_time.","A recheck is a second reading taken minutes later, so the later one is the final measurement."
+sites,repeated site_code rows,Keep only the current record for each site_code.,"Retired records hold old site names, and keeping both would duplicate patients in the join."
